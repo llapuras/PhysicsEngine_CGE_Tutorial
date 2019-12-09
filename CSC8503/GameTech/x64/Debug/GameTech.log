@@ -1,0 +1,8 @@
+﻿  TutorialGame.cpp
+D:\PhysicsEngine_Tutorial\Common\Keyboard.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winsock2.h(17,1): warning C4005: “_WINSOCKAPI_”: 宏重定义
+D:\PhysicsEngine_Tutorial\CSC8503\GameTech\TutorialGame.cpp : message : 参见“_WINSOCKAPI_”的前一个定义
+D:\PhysicsEngine_Tutorial\CSC8503\GameTech\TutorialGame.cpp(348,27): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+D:\PhysicsEngine_Tutorial\CSC8503\GameTech\TutorialGame.cpp(508,60): warning C4305: “参数”: 从“double”到“float”截断
+D:\PhysicsEngine_Tutorial\CSC8503\GameTech\TutorialGame.cpp(544,60): warning C4305: “参数”: 从“double”到“float”截断
+  GameTech.vcxproj -> D:\PhysicsEngine_Tutorial\x64\Debug\GameTech.exe

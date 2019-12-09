@@ -1,0 +1,3 @@
+﻿  PhysicsSystem.cpp
+D:\PhysicsEngine_Tutorial\Common\Keyboard.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  CSC8503Common.vcxproj -> D:\PhysicsEngine_Tutorial\Win32\Debug\CSC8503Common.lib
