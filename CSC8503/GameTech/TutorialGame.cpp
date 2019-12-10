@@ -6,7 +6,6 @@
 #include "../../Common/TextureLoader.h"
 
 #include "../CSC8503Common/PositionConstraint.h"
-
 #include <fstream>
 
 using namespace NCL;
@@ -195,9 +194,9 @@ void TutorialGame::DebugObjectMovement() {
 		//	selectionObject->GetPhysicsObject()->AddTorque(Vector3(-10, 0, 0));
 		//}
 
-		//if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
-		//	selectionObject->GetPhysicsObject()->AddTorque(Vector3(10, 0, 0));
-		//}
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::T)) {
+			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, 10, 0));
+		}
 
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
 			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, -forceMagnitude));
@@ -341,6 +340,11 @@ void TutorialGame::InitWorld() {
 	AddAppleToWorld(Vector3(42, 15, 32));
 	AddAppleToWorld(Vector3(70, 15, 72));
 
+	AddSphereToWorld(Vector3(42, 15, 22), 4.0, 0.1, 0.1);
+
+	AddSphereToWorld(Vector3(32, 15, 22), 2.0, 0.1, 3);
+
+
 	//AddParkKeeperToWorld(Vector3(40, 2, 0));
 	//AddCharacterToWorld(Vector3(45, 2, 0));
 	AddArea("Home", Vector3(15,-2.9,15));
@@ -349,8 +353,8 @@ void TutorialGame::InitWorld() {
 	AddWallToWorld(Vector3(0, 9, 0));
 	//AddBlockToWorld(Vector3(0, 7, 2));
 	//AddBlockToWorld(Vector3(0, 7, 4));
-
-	DrawMaze("TestGrid1.txt");
+	
+	//DrawMaze("TestGrid1.txt");
 
 	AddFloorToWorld(Vector3(45, -5, 45));
 }
@@ -491,10 +495,11 @@ rigid body representation. This and the cube function will let you build a lot o
 physics worlds. You'll probably need another function for the creation of OBB cubes too.
 
 */
-GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius, float inverseMass) {
+GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius, float inverseMass, float elasticity) {
 	GameObject* sphere = new GameObject("sphere");
 	//layer filter
 	sphere->SetLayer("floor");
+
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
 	sphere->SetBoundingVolume((CollisionVolume*)volume);
@@ -506,6 +511,7 @@ GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius
 
 	sphere->GetPhysicsObject()->SetInverseMass(inverseMass);
 	sphere->GetPhysicsObject()->InitSphereInertia();
+	sphere->GetPhysicsObject()->SetElasticity(elasticity); //add elasticity
 
 	world->AddGameObject(sphere);
 
@@ -644,8 +650,8 @@ GameObject* TutorialGame::AddAppleToWorld(const Vector3& position) {
 void TutorialGame::InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius) {
 	for (int x = 0; x < numCols; ++x) {
 		for (int z = 0; z < numRows; ++z) {
-			Vector3 position = Vector3(x * colSpacing, 10.0f, z * rowSpacing);
-			AddSphereToWorld(position, radius, 1.0f);
+			Vector3 position = Vector3(x * colSpacing, 30.0f, z * rowSpacing);
+			AddSphereToWorld(position, radius, std::rand()*0.1f, std::rand());
 		}
 	}
 	AddFloorToWorld(Vector3(0, -2, 0));

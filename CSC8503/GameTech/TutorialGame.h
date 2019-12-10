@@ -42,7 +42,7 @@ namespace NCL {
 			void TutorialGame::DrawMaze(const std::string& filename);
 
 			GameObject* AddFloorToWorld(const Vector3& position);
-			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f);
+			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f, float elasticity = 1.0f);
 			GameObject* AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
 			GameObject* AddBlockToWorld(const Vector3& position);
 			GameObject* AddWallToWorld(const Vector3& position);

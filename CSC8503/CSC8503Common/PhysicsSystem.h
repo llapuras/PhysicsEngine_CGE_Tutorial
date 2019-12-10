@@ -37,7 +37,7 @@ namespace NCL {
 			void UpdateCollisionList();
 			void UpdateObjectAABBs();
 
-			void ImpulseResolveCollision(GameObject& a , GameObject&b, CollisionDetection::ContactPoint& p) const;
+			void ImpulseResolveCollision(GameObject& a , GameObject&b, CollisionDetection::ContactPoint& p, float friction = 0.01) const;
 
 			GameWorld& gameWorld;
 

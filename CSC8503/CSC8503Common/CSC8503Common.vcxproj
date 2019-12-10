@@ -134,6 +134,7 @@
   <ItemGroup>
     <ClInclude Include="AABBVolume.h" />
     <ClInclude Include="BoundingAABB.h" />
+    <ClInclude Include="BoundingCapsule.h" />
     <ClInclude Include="BoundingOOBB.h" />
     <ClInclude Include="BoundingSphere.h" />
     <ClInclude Include="BoundingVolume.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="BoundingOOBB.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
     <ClCompile Include="BoundingVolume.cpp" />
+    <ClCompile Include="CapsuleVolumn.cpp" />
     <ClCompile Include="CollisionDetection.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="GameClient.cpp" />

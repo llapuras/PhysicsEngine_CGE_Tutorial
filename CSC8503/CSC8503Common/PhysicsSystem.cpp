@@ -16,8 +16,9 @@ PhysicsSystem::PhysicsSystem(GameWorld& g) : gameWorld(g)	{
 	applyGravity	= false;
 	useBroadPhase	= false;	
 	dTOffset		= 0.0f;
-	globalDamping	= 0.00f;
-	SetGravity(Vector3(0.0f, -9.8f, 0.0f));
+	globalDamping	= 0.05f;
+	gravity = Vector3(0.0f, -9.8f, 0.0f);
+	SetGravity(gravity);
 }
 
 PhysicsSystem::~PhysicsSystem()	{
@@ -191,7 +192,7 @@ In tutorial 5, we start determining the correct response to a collision,
 so that objects separate back out. 
 
 */
-void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, CollisionDetection::ContactPoint& p) const {
+void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, CollisionDetection::ContactPoint& p, float friction) const {
 	PhysicsObject* physA = a.GetPhysicsObject();
 	PhysicsObject* physB = b.GetPhysicsObject();
 	
@@ -216,6 +217,8 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	Vector3 fullVelocityB = physB -> GetLinearVelocity() + angVelocityB;
 
 	Vector3 contactVelocity = fullVelocityB - fullVelocityA;
+	
+	
 
 	float impulseForce = Vector3::Dot(contactVelocity, p.normal);
 	
@@ -224,11 +227,25 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	Vector3 inertiaB = Vector3::Cross(physB -> GetInertiaTensor() * Vector3::Cross(relativeB, p.normal), relativeB);
 	float angularEffect = Vector3::Dot(inertiaA + inertiaB, p.normal);
 
-	float cRestitution = 0.66f; // disperse some kinectic energy
+
+	//add elasticity variable!!! Q¦ØQ
+	float elasticityA = physA->GetElasticity();
+	float elasticityB = physB->GetElasticity();
+
+	float cRestitution = 0.66f * elasticityA * elasticityB; // disperse some kinectic energy
 	
 	float j = (-(1.0f + cRestitution) * impulseForce) / (totalMass + angularEffect);
 	
 	Vector3 fullImpulse = p.normal * j;
+
+	//-----------------------------------------------------------
+	float planarImpulse = sqrt(pow(fullImpulse.y, 2) + pow(fullImpulse.z, 2));
+
+	fullImpulse.y /= planarImpulse;
+	fullImpulse.z /= planarImpulse;
+
+	fullImpulse.y *= friction * fullImpulse.x;
+	fullImpulse.z *= friction * fullImpulse.x;
 
 	physA -> ApplyLinearImpulse(-fullImpulse);
 	physB -> ApplyLinearImpulse(fullImpulse);
@@ -352,7 +369,9 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 	std::vector < GameObject* >::const_iterator first;
 	std::vector < GameObject* >::const_iterator last;
 	gameWorld.GetObjectIterators(first, last);
-	float dampingFactor = 1.0f - 0.95f;
+
+	float dampingFactor = 1 - globalDamping;  //add global damping
+	
 	float frameDamping = powf(dampingFactor, dt);
 			
 	for (auto i = first; i != last; ++i) {

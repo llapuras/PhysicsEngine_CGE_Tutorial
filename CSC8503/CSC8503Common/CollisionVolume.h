@@ -5,6 +5,7 @@ namespace NCL {
 		OBB		= 2,
 		Sphere	= 4, 
 		Mesh	= 8,
+		Capsule = 12,
 		Compound= 16,
 		Invalid = 256
 	};

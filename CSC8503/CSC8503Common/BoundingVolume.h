@@ -8,6 +8,7 @@ namespace NCL {
 		AABB,
 		OOBB,
 		Sphere,
+		Capsule,
 		Mesh
 	};
 
