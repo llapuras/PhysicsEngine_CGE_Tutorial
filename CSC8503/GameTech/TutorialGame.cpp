@@ -195,8 +195,13 @@ void TutorialGame::DebugObjectMovement() {
 		//}
 
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::T)) {
+			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, -10, 0));
+		}
+
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::R)) {
 			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, 10, 0));
 		}
+
 
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
 			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, -forceMagnitude));
@@ -331,7 +336,8 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
-	//BridgeConstraintTest();
+	BridgeConstraintTest();
+	
 	//SimpleGJKTest();
 	//InitSphereGridWorld(3, 3, 3.5f, 3.5f, 2.0f);
 	//InitMixedGridWorld(10, 10, 3.5f, 3.5f);
@@ -354,7 +360,7 @@ void TutorialGame::InitWorld() {
 	//AddBlockToWorld(Vector3(0, 7, 2));
 	//AddBlockToWorld(Vector3(0, 7, 4));
 	
-	//DrawMaze("TestGrid1.txt");
+	DrawMaze("TestGrid1.txt");
 
 	AddFloorToWorld(Vector3(45, -5, 45));
 }
@@ -438,7 +444,7 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
 
 	floor->GetPhysicsObject()->SetInverseMass(0);
-	floor->GetPhysicsObject()->InitCubeInertia();
+	//floor->GetPhysicsObject()->InitCubeInertia();
 
 	world->AddGameObject(floor);
 
@@ -548,9 +554,12 @@ GameObject* TutorialGame::AddGooseToWorld(const Vector3& position)
 	float inverseMass	= 1.0f;
 
 	GameObject* goose = new GameObject("goose");
+	//layer filter
+	goose->SetLayer("floor");
 
-
-	SphereVolume* volume = new SphereVolume(size);
+	//换成了长方体检测
+	//SphereVolume* volume = new SphereVolume(size);
+	AABBVolume* volume = new AABBVolume(Vector3(1, 1, 1)*size);
 	goose->SetBoundingVolume((CollisionVolume*)volume);
 
 	goose->GetTransform().SetWorldScale(Vector3(size,size,size) );
@@ -560,7 +569,8 @@ GameObject* TutorialGame::AddGooseToWorld(const Vector3& position)
 	goose->SetPhysicsObject(new PhysicsObject(&goose->GetTransform(), goose->GetBoundingVolume()));
 
 	goose->GetPhysicsObject()->SetInverseMass(inverseMass);
-	goose->GetPhysicsObject()->InitSphereInertia();
+	goose->GetPhysicsObject()->InitCubeInertia();
+	//goose->GetPhysicsObject()->InitSphereInertia();
 
 	world->AddGameObject(goose);
 
@@ -663,7 +673,7 @@ void TutorialGame::InitMixedGridWorld(int numRows, int numCols, float rowSpacing
 
 	for (int x = 0; x < numCols; ++x) {
 		for (int z = 0; z < numRows; ++z) {
-			Vector3 position = Vector3(x * colSpacing, 10.0f, z * rowSpacing);
+			Vector3 position = Vector3(x * colSpacing+20, 10.0f, z * rowSpacing+30);
 
 			if (rand() % 2) {
 				AddCubeToWorld(position, cubeDims);
@@ -687,30 +697,38 @@ void TutorialGame::InitCubeGridWorld(int numRows, int numCols, float rowSpacing,
 }
 
 void TutorialGame::BridgeConstraintTest() {
-	Vector3 cubeSize = Vector3(8, 8, 8);
+	Vector3 cubeSize = Vector3(1, 1, 1);
 
-	float	invCubeMass = 5;
-	int		numLinks	= 25;
-	float	maxDistance	= 30;
-	float	cubeDistance = 20;
+	float	invCubeMass = 0.1;
+	int		numLinks = 1;
+	float	maxDistance = 1;
+	float	cubeDistance = 5;
 
-	Vector3 startPos = Vector3(0, 0, 0);
+	Vector3 startPos = Vector3(0, 20, 50);
 
-	GameObject* start = AddCubeToWorld(startPos + Vector3(0, 10, 0), cubeSize, 0);
-
-	GameObject* end = AddCubeToWorld(startPos + Vector3((numLinks + 2) * cubeDistance, 10, 0), cubeSize, 0);
-
+	//GameObject* start = AddCubeToWorld(startPos + Vector3(0, 10, 0), cubeSize, 0);
+	//GameObject* start = AddCubeToWorld(Vector3(22, 10, 22), cubeSize, 0);
+	GameObject* start = AddAppleToWorld(Vector3(22, 27, 22));
+	//GameObject* end = AddCubeToWorld(startPos + Vector3((numLinks + 2) * cubeDistance, 10, 0), cubeSize, 0);
+	GameObject* end = AddGooseToWorld(Vector3(22, 25, 22));
 	GameObject* previous = start;
 
-	for (int i = 0; i < numLinks; ++i) {
+	/*for (int i = 0; i < numLinks; ++i) {
 		GameObject* block = AddCubeToWorld(startPos + Vector3((i + 1) * cubeDistance, 0, 0), cubeSize, invCubeMass);
 		PositionConstraint* constraint = new PositionConstraint(previous, block, maxDistance);
 		world->AddConstraint(constraint);
 		previous = block;
+	}*/
+	FixedConstraint* constraint = new FixedConstraint(end, previous);
+
+	//PositionConstraint* constraint = new PositionConstraint(previous, end, maxDistance);
+	world->AddConstraint(constraint);
+
+	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::M)) {
+		std::cout << "awsl" << std::endl;
+		world->RemoveConstraint(constraint);
 	}
 
-	PositionConstraint* constraint = new PositionConstraint(previous, end, maxDistance);
-	world->AddConstraint(constraint);
 }
 
 void TutorialGame::SimpleGJKTest() {

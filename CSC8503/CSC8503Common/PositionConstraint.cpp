@@ -28,7 +28,8 @@ void PositionConstraint::UpdateConstraint(float dt) {
 	float currentDistance = relativePos.Length();
 	float offset = distance - currentDistance;
 
-	if (abs(offset) > 0.0f) {
+	if (abs(offset) > 0) {
+
 		Vector3 offsetDir = relativePos.Normalised();
 
 		PhysicsObject* physA = objectA->GetPhysicsObject();
@@ -54,4 +55,32 @@ void PositionConstraint::UpdateConstraint(float dt) {
 			physB -> ApplyLinearImpulse(bImpulse); // multiplied by mass here
 		}
 	}
+}
+
+//-----------------------------------------------------------------------
+//add new type constraint → fixed constraint
+//-----------------------------------------------------------------------
+FixedConstraint::FixedConstraint(GameObject* a, GameObject* b) {
+	objectA = a;
+	objectB = b;
+}
+
+FixedConstraint::~FixedConstraint() {
+
+}
+
+void FixedConstraint::UpdateConstraint(float dt) {
+	//计算相对位置，一旦物体触碰，则物体B会固定到物体A上
+	Vector3 relativePos =
+		objectA->GetConstTransform().GetWorldPosition() - objectB->GetConstTransform().GetWorldPosition();
+
+	//一旦监测到大鹅和苹果碰撞，就把苹果加到大鹅嘴巴的位置，不像positionconstraint，不会有多余的力被施加
+	//只是两个物体的相对位置不再发生变化
+	PhysicsObject* physA = objectA->GetPhysicsObject();
+	PhysicsObject* physB = objectB->GetPhysicsObject();
+
+	//同步物体A的速度和加速度到物体B（到这一步是ok的）
+	physB->SetLinearVelocity(physA->GetLinearVelocity());
+	physB->SetAngularVelocity(physA->GetAngularVelocity());
+	
 }

@@ -29,7 +29,8 @@
     ENet, and so 100% of all unreliable packets will be sent.  When the throttle has a
     value of 0, all unreliable packets are dropped by ENet, and so 0% of all unreliable
     packets will be sent.  Intermediate values for the throttle represent intermediate
-    probabilities between 0% and 100% of unreliable packets being sent.  The bandwidth
+    probabilities 
+0% and 100% of unreliable packets being sent.  The bandwidth
     limits of the local and foreign hosts are taken into account to determine a 
     sensible limit for the throttle probability above which it should not raise even in
     the best of conditions.

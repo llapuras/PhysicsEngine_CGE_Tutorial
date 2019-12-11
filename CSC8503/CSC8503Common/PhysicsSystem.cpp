@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "CollisionDetection.h"
 #include "../../Common/Quaternion.h"
-
+#include "../CSC8503Common/PositionConstraint.h"
 #include "Constraint.h"
 
 #include "Debug.h"
@@ -180,7 +180,9 @@ void PhysicsSystem::BasicCollisionDetection() {
 				//如果鹅与苹果发生碰撞，则苹果消失
 				//if (((*i)->GetName() == "apple" && (*j)->GetName() == "goose")) (*i)->~GameObject();
 				//else if (((*i)->GetName() == "goose" && (*j)->GetName() == "apple")) (*j)->~GameObject();
-				//std::cout << " Collision between " << (*i)->GetName() << " and " << (*j)->GetName() << std::endl;
+				if ((((*i)->GetName() == "apple" && (*j)->GetName() == "goose")) | (((*i)->GetName() == "goose" && (*j)->GetName() == "apple"))) {
+					std::cout << " Collision between " << (*i)->GetName() << " and " << (*j)->GetName() << std::endl;
+				}
 			}
 		}
 	}
