@@ -205,6 +205,10 @@ void OGLRenderer::DrawLine(const Vector3& start, const Vector3& end, const Vecto
 	debugLines.emplace_back(l);
 }
 
+void OGLRenderer::EraseLines() {
+	debugLines.clear();
+};
+
 void OGLRenderer::DrawDebugData() {
 	if (debugStrings.empty() && debugLines.empty()) {
 		return; //don't mess with OGL state if there's no point!

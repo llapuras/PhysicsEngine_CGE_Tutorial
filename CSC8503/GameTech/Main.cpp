@@ -106,9 +106,9 @@ int main() {
 		return -1;
 	}
 
-	//TestStateMachine();
+	TestStateMachine();
 	TestNetworking();
-	TestPathfinding();
+	//TestPathfinding();
 
 	w->ShowOSPointer(false);
 	w->LockMouseToWindow(true);

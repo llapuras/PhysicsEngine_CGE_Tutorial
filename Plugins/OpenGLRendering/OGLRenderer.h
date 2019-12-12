@@ -56,6 +56,7 @@ namespace NCL {
 
 			void DrawString(const std::string& text, const Vector2&pos, const Vector4& colour = Vector4(0.75f, 0.75f, 0.75f,1));
 			void DrawLine(const Vector3& start, const Vector3& end, const Vector4& colour);
+			void EraseLines();
 
 			virtual void SetupDebugMatrix(OGLShader*s) {
 

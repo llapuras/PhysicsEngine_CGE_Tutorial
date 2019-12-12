@@ -1,4 +1,9 @@
 #include "TutorialGame.h"
+
+#include "../CSC8503Common/StateMachine.h"
+#include "../CSC8503Common/StateTransition.h"
+#include "../CSC8503Common/State.h"
+
 #include "../CSC8503Common/GameWorld.h"
 #include "../../Plugins/OpenGLRendering/OGLMesh.h"
 #include "../../Plugins/OpenGLRendering/OGLShader.h"
@@ -10,6 +15,9 @@
 
 using namespace NCL;
 using namespace CSC8503;
+
+GameObject* gugugu;
+GameObject* man;
 
 TutorialGame::TutorialGame()	{
 	world		= new GameWorld();
@@ -24,6 +32,45 @@ TutorialGame::TutorialGame()	{
 
 	InitialiseAssets();
 }
+
+
+vector < Vector3 > testNodes02;
+float ChaseSpeed = 0.03f;
+void TutorialGame::AChasedByB(GameObject* a, GameObject* b, float minDistant) {
+	
+	NavigationGrid grid("TestGrid1.txt");
+
+	NavigationPath outPath;
+
+	Vector3 startPos = a -> GetTransform().GetWorldPosition();
+	Vector3 endPos = b -> GetTransform().GetWorldPosition();
+	Vector3 relativePos = startPos - endPos;
+	
+	if (relativePos.Length() < minDistant) {
+		//追逐者移动方向
+		Vector3 chaseDir = Vector3(ChaseSpeed, ChaseSpeed, ChaseSpeed) * (startPos - endPos).Normalised();
+		b->GetTransform().SetWorldPosition(endPos + chaseDir);
+	}
+	bool found = grid.FindPath(startPos, endPos, outPath);
+
+	Vector3 pos;
+	while (outPath.PopWaypoint(pos)) {
+		testNodes02.push_back(pos);
+	}
+
+
+
+	//debug用
+	Debug::EraseLines();//擦掉之前的线
+	for (int i = 1; i < testNodes02.size(); ++i) {
+		Vector3 posA = testNodes02[i - 1];
+		Vector3 posB = testNodes02[i];
+
+		Debug::DrawLine(posA, posB, Vector4(1, 0, 0, 1));
+	}
+
+}
+
 
 /*
 
@@ -95,6 +142,10 @@ void TutorialGame::UpdateGame(float dt) {
 
 	Debug::FlushRenderables();
 	renderer->Render();
+
+	//Debug::DrawLine(gugugu->GetTransform().GetWorldPosition(), man->GetTransform().GetWorldPosition(), Vector4(1, 0, 0, 1));
+	testNodes02.clear();
+	AChasedByB(gugugu, man, 20);
 }
 
 void TutorialGame::UpdateKeys() {
@@ -104,7 +155,7 @@ void TutorialGame::UpdateKeys() {
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
-		InitCamera(); //F2 will reset the camera to a specific default place
+		InitCamera(gugugu); //F2 will reset the camera to a specific default place
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::G)) {
@@ -259,26 +310,29 @@ bool TutorialGame::SelectObject() {
 
 	if (inSelectionMode) {
 		renderer->DrawString("Press Q to change to camera mode!", Vector2(10, 0));
-		if (Window::GetMouse()->ButtonDown(NCL::MouseButtons::LEFT)) {
-			if (selectionObject) {	//set colour to deselected;
-				selectionObject->GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
-				selectionObject = nullptr;
-			}
+		//if (Window::GetMouse()->ButtonDown(NCL::MouseButtons::LEFT)) {
+		//	if (selectionObject) {	//set colour to deselected;
+		selectionObject = gugugu;
+		selectionObject->GetRenderObject()->SetColour(Vector4(1, 1, 1, 1));
 
-			Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
+		//	}
+		//	
+		//	Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
 
-			RayCollision closestCollision;
-			if (world->Raycast(ray, closestCollision, true)) {
-				selectionObject = (GameObject*)closestCollision.node;
-				selectionObject->GetRenderObject()->SetColour(Vector4(0, 0, 0.8, 1));
-				return true;
-			}
-			else {
+		//	RayCollision closestCollision;
+		//	if (world->Raycast(ray, closestCollision, true)) {
+		//		selectionObject = (GameObject*)closestCollision.node;
+		//		selectionObject->GetRenderObject()->SetColour(Vector4(0, 0, 0.8, 1));
+		//		return true;
+		//	}
+		//	else {
+		//		return false;
+		//	}
+		//}
 
-				return false;
-				return false;
-			}
-		}
+
+
+
 		if (Window::GetKeyboard()->KeyPressed(NCL::KeyboardKeys::L)) {
 			if (selectionObject) {
 				if (lockedObject == selectionObject) {
@@ -323,35 +377,37 @@ void TutorialGame::MoveSelectedObject() {
 	}
 }
 
-void TutorialGame::InitCamera() {
+//添加摄像机target跟随
+void TutorialGame::InitCamera(GameObject* target){
 	world->GetMainCamera()->SetNearPlane(0.5f);
 	world->GetMainCamera()->SetFarPlane(500.0f);
 	world->GetMainCamera()->SetPitch(-15.0f);
 	world->GetMainCamera()->SetYaw(315.0f);
 	world->GetMainCamera()->SetPosition(Vector3(-60, 40, 60));
-	lockedObject = nullptr;
+	lockedObject = target;
 }
 
 void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
-	BridgeConstraintTest();
+	//BridgeConstraintTest();
 	
 	//SimpleGJKTest();
 	//InitSphereGridWorld(3, 3, 3.5f, 3.5f, 2.0f);
 	//InitMixedGridWorld(10, 10, 3.5f, 3.5f);
-	AddGooseToWorld(Vector3(22, 15, 22));
+	gugugu = AddGooseToWorld(Vector3(15, 15, 22));
+	gugugu->GetPhysicsObject()->SetInverseMass(10);
 	
-	AddAppleToWorld(Vector3(42, 15, 32));
-	AddAppleToWorld(Vector3(70, 15, 72));
+	//AddAppleToWorld(Vector3(42, 15, 32));
+	//AddAppleToWorld(Vector3(70, 15, 72));
 
-	AddSphereToWorld(Vector3(42, 15, 22), 4.0, 0.1, 0.1);
+	//AddSphereToWorld(Vector3(42, 15, 22), 4.0, 0.1, 0.1);
 
-	AddSphereToWorld(Vector3(32, 15, 22), 2.0, 0.1, 3);
+	//AddSphereToWorld(Vector3(32, 15, 22), 2.0, 0.1, 3);
 
 
-	//AddParkKeeperToWorld(Vector3(40, 2, 0));
+	man = AddParkKeeperToWorld(Vector3(70, 15, 72));
 	//AddCharacterToWorld(Vector3(45, 2, 0));
 	AddArea("Home", Vector3(15,-2.9,15));
 
@@ -363,6 +419,8 @@ void TutorialGame::InitWorld() {
 	DrawMaze("TestGrid1.txt");
 
 	AddFloorToWorld(Vector3(45, -5, 45));
+
+	
 }
 
 void TutorialGame::InitMaze() {
@@ -430,7 +488,6 @@ GameObject* TutorialGame::AddArea(const string name, const Vector3& position, co
 }
 
 
-
 GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 	GameObject* floor = new GameObject("floor");
 	floor->SetLayer("Ground");
@@ -444,7 +501,7 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
 
 	floor->GetPhysicsObject()->SetInverseMass(0);
-	//floor->GetPhysicsObject()->InitCubeInertia();
+	floor->GetPhysicsObject()->InitCubeInertia();
 
 	world->AddGameObject(floor);
 
@@ -473,6 +530,7 @@ GameObject* TutorialGame::AddBlockToWorld(const Vector3& position) {
 
 GameObject* TutorialGame::AddWallToWorld(const Vector3& position) {
 	GameObject* floor = new GameObject("floor");
+
 	floor->SetLayer("Wall");
 	Vector3 floorSize = Vector3(5, 5, 5);
 	AABBVolume* volume = new AABBVolume(floorSize);

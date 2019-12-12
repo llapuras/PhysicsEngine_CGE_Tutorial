@@ -70,9 +70,6 @@ FixedConstraint::~FixedConstraint() {
 }
 
 void FixedConstraint::UpdateConstraint(float dt) {
-	//计算相对位置，一旦物体触碰，则物体B会固定到物体A上
-	Vector3 relativePos =
-		objectA->GetConstTransform().GetWorldPosition() - objectB->GetConstTransform().GetWorldPosition();
 
 	//一旦监测到大鹅和苹果碰撞，就把苹果加到大鹅嘴巴的位置，不像positionconstraint，不会有多余的力被施加
 	//只是两个物体的相对位置不再发生变化

@@ -9,6 +9,7 @@ namespace NCL {
 		class TutorialGame		{
 		public:
 			TutorialGame();
+			void AChasedByB(GameObject* a, GameObject* b);
 			~TutorialGame();
 
 			virtual void UpdateGame(float dt);
@@ -16,7 +17,8 @@ namespace NCL {
 		protected:
 			void InitialiseAssets();
 
-			void InitCamera();
+			//添加照相机跟随选项
+			void InitCamera(GameObject* target = nullptr);
 			void UpdateKeys();
 
 			void InitWorld();
@@ -39,7 +41,13 @@ namespace NCL {
 			void LockedCameraMovement();
 			void InitMaze();
 
-			void TutorialGame::DrawMaze(const std::string& filename);
+
+			//新功能
+			void DrawMaze(const std::string& filename);  //生成地图
+			void AChasedByB(GameObject* a, GameObject* b, float minDistant = 10);  //生成追赶寻路,距离x单位长度开始追逐
+
+			
+
 
 			GameObject* AddFloorToWorld(const Vector3& position);
 			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f, float elasticity = 1.0f);
@@ -82,7 +90,7 @@ namespace NCL {
 
 			//Coursework Additional functionality	
 			GameObject* lockedObject	= nullptr;
-			Vector3 lockedOffset		= Vector3(0, 14, 20);
+			Vector3 lockedOffset		= Vector3(0, 16, -20);
 			void LockCameraToObject(GameObject* o) {
 				lockedObject = o;
 			}

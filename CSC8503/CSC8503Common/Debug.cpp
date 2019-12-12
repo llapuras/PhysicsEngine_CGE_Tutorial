@@ -28,6 +28,10 @@ void Debug::DrawLine(const Vector3& startpoint, const Vector3& endpoint, const V
 	lineEntries.emplace_back(newEntry);
 }
 
+void Debug::EraseLines() {
+	lineEntries.clear();
+};
+
 void Debug::FlushRenderables() {
 	if (!renderer) {
 		return;

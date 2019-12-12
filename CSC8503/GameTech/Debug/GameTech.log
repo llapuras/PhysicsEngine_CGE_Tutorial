@@ -2,18 +2,16 @@
 D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\Common\Keyboard.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winsock2.h(17,1): warning C4005: “_WINSOCKAPI_”: 宏重定义
 D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp : message : 参见“_WINSOCKAPI_”的前一个定义
-D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.h(50,126): warning C4305: “参数”: 从“double”到“float”截断
-D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(246,72): warning C4305: “参数”: 从“double”到“float”截断
-D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(273,71): warning C4305: “参数”: 从“double”到“float”截断
-D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(349,53): warning C4305: “参数”: 从“double”到“float”截断
-D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(351,51): warning C4305: “参数”: 从“double”到“float”截断
-D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(356,36): warning C4305: “参数”: 从“double”到“float”截断
-D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(370,27): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
-D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(395,47): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
-D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(395,38): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
-D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(413,37): warning C4305: “参数”: 从“double”到“float”截断
-D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(587,60): warning C4305: “参数”: 从“double”到“float”截断
-D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(623,60): warning C4305: “参数”: 从“double”到“float”截断
-D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(664,66): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
-D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(702,25): warning C4305: “初始化”: 从“double”到“float”截断
+D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.h(58,126): warning C4305: “参数”: 从“double”到“float”截断
+D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(65,20): warning C4018: “<”: 有符号/无符号不匹配
+D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(297,72): warning C4305: “参数”: 从“double”到“float”截断
+D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(412,36): warning C4305: “参数”: 从“double”到“float”截断
+D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(428,27): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(453,47): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(453,38): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(471,37): warning C4305: “参数”: 从“double”到“float”截断
+D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(645,60): warning C4305: “参数”: 从“double”到“float”截断
+D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(681,60): warning C4305: “参数”: 从“double”到“float”截断
+D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(722,66): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\CSC8503\GameTech\TutorialGame.cpp(760,25): warning C4305: “初始化”: 从“double”到“float”截断
   GameTech.vcxproj -> D:\PhysicsEngine_CGE_Tutorial\PhysicsEngine_CGE_Tutorial\Win32\Debug\GameTech.exe
