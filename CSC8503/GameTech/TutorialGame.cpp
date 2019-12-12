@@ -146,6 +146,10 @@ void TutorialGame::UpdateGame(float dt) {
 	//Debug::DrawLine(gugugu->GetTransform().GetWorldPosition(), man->GetTransform().GetWorldPosition(), Vector4(1, 0, 0, 1));
 	testNodes02.clear();
 	AChasedByB(gugugu, man, 20);
+
+	//状态机检查
+	GooseGameMenuStateMachine();
+	GooseStateMachine();
 }
 
 void TutorialGame::UpdateKeys() {
@@ -202,18 +206,22 @@ void TutorialGame::LockedObjectMovement() {
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
 		selectionObject->GetPhysicsObject()->AddForce(-rightAxis);
+		gooseData = 1; //状态机
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
 		selectionObject->GetPhysicsObject()->AddForce(rightAxis);
+		gooseData = 1; //状态机
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
 		selectionObject->GetPhysicsObject()->AddForce(fwdAxis);
+		gooseData = 1; //状态机
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
 		selectionObject->GetPhysicsObject()->AddForce(-fwdAxis);
+		gooseData = 1; //状态机
 	}
 }
 
@@ -236,7 +244,7 @@ void  TutorialGame::LockedCameraMovement() {
 }
 
 
-void TutorialGame::DebugObjectMovement() {
+bool TutorialGame::DebugObjectMovement() {
 //If we've selected an object, we can manipulate it with some key presses
 	if (inSelectionMode && selectionObject) {
 		//Twist the selected object!
@@ -244,6 +252,8 @@ void TutorialGame::DebugObjectMovement() {
 		//if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
 		//	selectionObject->GetPhysicsObject()->AddTorque(Vector3(-10, 0, 0));
 		//}
+
+		gooseData = 0; //状态机
 
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::T)) {
 			selectionObject->GetPhysicsObject()->AddTorque(Vector3(0, -10, 0));
@@ -256,18 +266,22 @@ void TutorialGame::DebugObjectMovement() {
 
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
 			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, -forceMagnitude));
+			gooseData = 1; //状态机
 		}
 
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::LEFT)) {
 			selectionObject->GetPhysicsObject()->AddForce(Vector3(-forceMagnitude, 0, 0));
+			gooseData = 1; //状态机
 		}
 
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::RIGHT)) {
 			selectionObject->GetPhysicsObject()->AddForce(Vector3(forceMagnitude, 0, 0));
+			gooseData = 1; //状态机
 		}
 
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::DOWN)) {
 			selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, forceMagnitude));
+			gooseData = 1; //状态机
 		}
 
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM5)) {
@@ -801,5 +815,134 @@ void TutorialGame::SimpleGJKTest() {
 
 	fallingCube->SetBoundingVolume((CollisionVolume*)new OBBVolume(dimensions));
 	newFloor->SetBoundingVolume((CollisionVolume*)new OBBVolume(floorDimensions));
+
+}
+
+
+//statemachine
+//状态机
+void TutorialGame::GooseGameMenuStateMachine() {
+
+	StateMachine* menuStateMachine = new StateMachine();
+
+	StateFunc Menu = [](void* data) {
+		int* realData = (int*)data;
+		(*realData)++;
+		std::cout << "Menu Page" << std::endl;
+	};
+
+	StateFunc MultiMode = [](void* data) {
+		int* realData = (int*)data;
+		(*realData)--;
+		std::cout << "Menu MultiMode" << std::endl;
+	};
+
+	StateFunc SingleMode = [](void* data) {
+		int* realData = (int*)data;
+		(*realData)--;
+		std::cout << "Menu SingleMode" << std::endl;
+	};
+
+	StateFunc GameOver = [](void* data) {
+		int* realData = (int*)data;
+		(*realData)--;
+		std::cout << "Menu GameOver" << std::endl;
+	};
+
+}
+
+StateMachine* gooseStateMachine = new StateMachine();
+void TutorialGame::GooseStateMachine() {
+
+	Matrix4 view = world->GetMainCamera()->BuildViewMatrix();
+	Matrix4 camWorld = view.Inverse();
+	Vector3 rightAxis = Vector3(camWorld.GetColumn(0)); //view is inverse of model!
+
+	
+	std::cout << gooseData << std::endl;
+
+
+	//if (Window::GetKeyboard()->KeyDown(KeyboardKeys::UP)) {
+	//	selectionObject->GetPhysicsObject()->AddForce(Vector3(0, 0, -forceMagnitude));
+	//	gooseData = 1; //状态机
+	//}
+
+	StateFunc Idle = [](void* data) {
+		int* realData = (int*)data;
+		(*realData) = 0;
+		std::cout << "Goose Idle" << std::endl;
+	};
+
+	StateFunc Move = [](void* data) {
+		int* realData = (int*)data;
+		(*realData) = 1;
+		std::cout << "Goose Move" << std::endl;
+	};
+
+	StateFunc Fetch = [](void* data) {
+		int* realData = (int*)data;
+		(*realData)--;
+		std::cout << "Goose Fetch" << std::endl;
+	};
+
+	StateFunc Unfetch = [](void* data) {
+		int* realData = (int*)data;
+		(*realData)--;
+		std::cout << "Goose unFetch" << std::endl;
+	};
+
+	StateFunc ResetPos = [](void* data) {
+		int* realData = (int*)data;
+		(*realData)--;
+		std::cout << "Goose Reset Poition" << std::endl;
+	};
+
+	GenericState* stateIdle = new GenericState(Idle, (void*)&gooseData);
+	GenericState* stateMove = new GenericState(Move, (void*)&gooseData);
+
+	gooseStateMachine->AddState(stateIdle);
+	gooseStateMachine->AddState(stateMove);
+
+	//这里添加了两个状态
+	GenericTransition <int&, int>* transitionA =
+		new GenericTransition <int&, int>(
+			GenericTransition <int&, int>::EqualsTransition,
+			gooseData, 1, stateIdle, stateMove); //data = 1时，在行动
+
+	GenericTransition <int&, int>* transitionB =
+		new GenericTransition <int&, int>(
+			GenericTransition <int&, int>::EqualsTransition,
+			gooseData, 0, stateMove, stateIdle); //data = 0时，在行动
+
+
+	gooseStateMachine->AddTransition(transitionA);
+	gooseStateMachine->AddTransition(transitionB);
+
+	gooseStateMachine->Update();
+}
+
+void TutorialGame::KeeperStateMachine() {
+	
+	StateMachine* keeperStateMachine = new StateMachine();
+
+	StateFunc Idle = [](void* data) {
+		int* realData = (int*)data;
+		(*realData)++;
+		std::cout << "Goose Idle" << std::endl;
+	};
+
+	StateFunc MoveToward = [](void* data) {
+		int* realData = (int*)data;
+		(*realData)--;
+		std::cout << "Keeper MoveToward" << std::endl;
+	};
+
+	StateFunc CatchGoose = [](void* data) {
+		int* realData = (int*)data;
+		(*realData)--;
+		std::cout << "Keeper CatchGoose" << std::endl;
+	};
+
+	
 
 }

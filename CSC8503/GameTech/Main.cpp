@@ -10,6 +10,7 @@
 #include "../CSC8503Common/NavigationGrid.h"
 
 #include "TutorialGame.h"
+#include "GooseGame.h"
 #include "NetworkedGame.h"
 
 using namespace NCL;
@@ -106,7 +107,7 @@ int main() {
 		return -1;
 	}
 
-	TestStateMachine();
+	//TestStateMachine();
 	TestNetworking();
 	//TestPathfinding();
 

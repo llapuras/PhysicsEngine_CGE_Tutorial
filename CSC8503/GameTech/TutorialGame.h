@@ -36,7 +36,7 @@ namespace NCL {
 
 			bool SelectObject();
 			void MoveSelectedObject();
-			void DebugObjectMovement();
+			bool DebugObjectMovement(); //状态机改成bool
 			void LockedObjectMovement();
 			void LockedCameraMovement();
 			void InitMaze();
@@ -46,7 +46,16 @@ namespace NCL {
 			void DrawMaze(const std::string& filename);  //生成地图
 			void AChasedByB(GameObject* a, GameObject* b, float minDistant = 10);  //生成追赶寻路,距离x单位长度开始追逐
 
-			
+			//状态机
+			void GooseGameMenuStateMachine();
+			void GooseStateMachine();
+			void KeeperStateMachine();
+
+			int gooseData = 0;
+			int keeperData = 0;
+			int menuData = 0;
+
+			//StateMachine* gooseStateMachine;
 
 
 			GameObject* AddFloorToWorld(const Vector3& position);
